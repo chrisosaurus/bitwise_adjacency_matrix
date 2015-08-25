@@ -1,2 +1,4 @@
 # bitwise_adjacency_matrix
-naive adjacency matrix implementation using bitwise operations
+
+adjacency matrix implementation using bitwise operations
+
