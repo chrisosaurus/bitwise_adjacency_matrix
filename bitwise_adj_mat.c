@@ -4,10 +4,23 @@
 
 #include "bitwise_adj_mat.h"
 
+/* leaving this in place as we have some internal only helper functions
+ * that we only exposed to allow for easy testing and extension
+ */
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+
+/**********************************************
+ **********************************************
+ **********************************************
+ ******** simple helper functions *************
+ **********************************************
+ **********************************************
+ ***********************************************/
+
 /* return pointer to cell in cells at [col][row]
  * returns 0 on error
  */
-static unsigned char * bam_access_cell(uint8_t *cells, unsigned int n_cols, unsigned int n_rows, unsigned int col, unsigned int row){
+unsigned char * bam_access_cell(uint8_t *cells, unsigned int n_cols, unsigned int n_rows, unsigned int col, unsigned int row){
     unsigned int index = 0;
 
     if( ! cells ){
@@ -44,7 +57,7 @@ static unsigned char * bam_access_cell(uint8_t *cells, unsigned int n_cols, unsi
  * returns 1 on success
  * returns 0 on error
  */
-static unsigned int bam_set_edge(struct bitwise_adj_mat *bam, unsigned int col, unsigned int row, unsigned int value){
+unsigned int bam_set_edge(struct bitwise_adj_mat *bam, unsigned int col, unsigned int row, unsigned int value){
     unsigned int index = 0;
     uint8_t mask = 0;
 
@@ -103,7 +116,7 @@ static unsigned int bam_set_edge(struct bitwise_adj_mat *bam, unsigned int col, 
  * returns value on success (which may be 1 or 0)
  * returns 0 on error
  */
-static unsigned int bam_get_edge(struct bitwise_adj_mat *bam, unsigned int col, unsigned int row){
+unsigned int bam_get_edge(struct bitwise_adj_mat *bam, unsigned int col, unsigned int row){
     unsigned int index = 0;
     uint8_t mask = 0;
     unsigned int res = 0;
@@ -146,6 +159,15 @@ static unsigned int bam_get_edge(struct bitwise_adj_mat *bam, unsigned int col, 
     /* returns true iff res is non-zero */
     return res != 0;
 }
+
+
+/**********************************************
+ **********************************************
+ **********************************************
+ ******** bitwise_adj_mat.h implementation ****
+ **********************************************
+ **********************************************
+ ***********************************************/
 
 /* allocate and initialise a new adj. matrix containing `num_nodes` nodes
  * `num_nodes` may be 0

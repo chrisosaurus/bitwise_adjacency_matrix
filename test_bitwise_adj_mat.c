@@ -12,6 +12,12 @@ void resize(void );
 void sizing(void );
 void null(void);
 void invalid(void);
+void internal(void);
+
+/* internal functions to test */
+unsigned char * bam_access_cell(uint8_t *cells, unsigned int n_cols, unsigned int n_rows, unsigned int col, unsigned int row);
+unsigned int bam_set_edge(struct bitwise_adj_mat *bam, unsigned int col, unsigned int row, unsigned int value);
+unsigned int bam_get_edge(struct bitwise_adj_mat *bam, unsigned int col, unsigned int row);
 
 void simple(void){
     struct bitwise_adj_mat *bam = 0;
@@ -251,6 +257,42 @@ void invalid(void){
     puts("success!");
 }
 
+void internal(void){
+    struct bitwise_adj_mat *bam = 0;
+
+    puts("\ntesting calling internal functions with invalid arguments (warnings will be printed)");
+
+    bam = bam_new(2);
+    assert(bam);
+
+
+    /*invalid first arg */
+    assert( 0 == bam_access_cell(0, 0, 0, 0, 0) );
+    /*invalid fourth arg */
+    assert( 0 == bam_access_cell(bam->cells, 2, 2, 2, 0) );
+    /*invalid fifth arg */
+    assert( 0 == bam_access_cell(bam->cells, 2, 2, 0, 2) );
+
+    /*invalid first arg */
+    assert( 0 == bam_set_edge(0,   0, 0, 0) );
+    /*invalid second arg */
+    assert( 0 == bam_set_edge(bam, 2, 0, 0) );
+    /*invalid third arg */
+    assert( 0 == bam_set_edge(bam, 0, 2, 0) );
+    /* fourth arg that must be squashed */
+    assert( bam_set_edge(bam, 0, 0, 20) );
+
+    /*invalid first arg */
+    assert( 0 == bam_get_edge(0,   0, 0) );
+    /*invalid second arg */
+    assert( 0 == bam_get_edge(bam, 2, 0) );
+    /*invalid third arg */
+    assert( 0 == bam_get_edge(bam, 0, 2) );
+
+
+    assert( bam_destroy(bam, 1) );
+    puts("success!");
+}
 
 int main(void){
     simple();
@@ -264,6 +306,8 @@ int main(void){
     null();
 
     invalid();
+
+    internal();
 
     puts("\noverall testing success!");
 
