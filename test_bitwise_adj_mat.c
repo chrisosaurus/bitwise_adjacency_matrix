@@ -10,6 +10,8 @@ void simple(void );
 void init(void );
 void resize(void );
 void sizing(void );
+void null(void);
+void invalid(void);
 
 void simple(void){
     struct bitwise_adj_mat *bam = 0;
@@ -193,6 +195,63 @@ void sizing(void){
     puts("success!");
 }
 
+void null(void){
+    puts("\ntesting calling functions with null (warnings will be printed)");
+
+    assert( 0 == bam_init(0, 0) );
+
+    assert( 0 == bam_destroy(0, 0) );
+
+    assert( 0 == bam_resize(0, 0) );
+
+    assert( 0 == bam_size(0) );
+
+    assert( 0 == bam_add_edge(0, 0, 0) );
+
+    assert( 0 == bam_remove_edge(0, 0, 0) );
+
+    assert( 0 == bam_test_edge(0, 0, 0) );
+
+    puts("success!");
+}
+
+void invalid(void){
+    struct bitwise_adj_mat *bam = 0;
+
+    puts("\ntesting calling functions with invalid arguments (warnings will be printed)");
+
+    /* 2 * 2 */
+    bam = bam_new(2);
+    assert(bam);
+
+
+    /* cannot resize to 0 */
+    assert( 0 == bam_resize(bam, 0) );
+
+    /* cannot add an edge with a from >= size (2) */
+    assert( 0 == bam_add_edge(bam, 2, 0) );
+
+    /* cannot add an edge with a to >= size (2) */
+    assert( 0 == bam_add_edge(bam, 0, 2) );
+
+    /* cannot remove an edge with a from >= size (2) */
+    assert( 0 == bam_remove_edge(bam, 2, 0) );
+
+    /* cannot remove an edge with a to >= size (2) */
+    assert( 0 == bam_remove_edge(bam, 0, 2) );
+
+    /* cannot test an edge with a from >= size (2) */
+    assert( 0 == bam_test_edge(bam, 2, 0) );
+
+    /* cannot test an edge with a to >= size (2) */
+    assert( 0 == bam_test_edge(bam, 0, 2) );
+
+
+    assert( bam_destroy(bam, 1) );
+    puts("success!");
+}
+
+
 int main(void){
     simple();
 
@@ -201,6 +260,10 @@ int main(void){
     resize();
 
     sizing();
+
+    null();
+
+    invalid();
 
     puts("\noverall testing success!");
 
